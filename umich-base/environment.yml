@@ -13,20 +13,20 @@ dependencies:
   # use python 3.8 as the default
   - python=3.8.5
 
-  # add r packages if needed, for example
-  # - r-base=3.6.*
-  # - r-caret=6.*
+  # install mamba package manager
+  - mamba
 
-  # you can also add additional kernels. for example,
-  # - xeus-cling=0.9.*
+  # extras for julia GMT.jl
+  - gmt
 
   # python/pip packages
   - pip
   - pip:
     # add these packages to all features to work
-    - jupyter-contrib-nbextensions==0.5
-    - jupyterhub==1.1.0
-    - nbgitpuller==0.8.0
+    - jupyter-contrib-nbextensions==0.5.*
+    - jupyterhub==1.2.1
+    - nbgitpuller==0.9.0
     - nbresuse==0.3.*
-    # add more pip packages as needed, for example:
-    # - matplotlib==3.3.0
+    - https://github.com/IllumiDesk/nbgrader/archive/v0.64.2.zip
+    - jupyter-server-proxy==1.5.0
+    - jupyterlab==2.2.8

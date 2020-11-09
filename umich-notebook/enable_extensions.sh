@@ -1,5 +1,9 @@
 #!/bin/bash
 
+enable_julia_webio_extension() (
+    julia -e "using WebIO; WebIO.install_jupyter_nbextension()"
+)
+
 install_instructor_extensions() (
     jupyter serverextension enable --sys-prefix nbgrader.server_extensions.assignment_list
     jupyter serverextension enable --sys-prefix nbgrader.server_extensions.course_list
@@ -21,3 +25,5 @@ if [[ "${USER_ROLE}" == "Student" ]] || [[ "${USER_ROLE}" == "Learner" ]]; then
     echo "Enabling nbgrader extensions for Student/Learner role"
     install_student_extensions
 fi
+
+enable_julia_webio_extension

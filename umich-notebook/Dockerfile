@@ -66,9 +66,9 @@ USER "${NB_UID}"
 
 # reinstall everything in the requirements.txt file but ignore terminado to avoid disutils error
 # https://github.com/pypa/pip/issues/5247
-COPY requirements.txt /tmp/requirements.txt
-RUN python3 -m pip install --no-cache --force -r /tmp/requirements.txt --ignore-installed \
-    terminado
+#COPY requirements.txt /tmp/requirements.txt
+#RUN python3 -m pip install --no-cache --force -r /tmp/requirements.txt --ignore-installed \
+#    terminado
 
 RUN jupyter serverextension enable --sys-prefix --py jupyter_server_proxy \
  && jupyter labextension install @jupyterlab/server-proxy@^2.1.1 \
@@ -80,14 +80,12 @@ RUN jupyter serverextension enable --sys-prefix --py jupyter_server_proxy \
  && fix-permissions "${CONDA_DIR}" \
  && fix-permissions "${HOME}"
 
-# Install Tini
-RUN conda install --quiet --yes 'tini=0.18.0' && \
-    conda list tini | grep tini | tr -s ' ' | cut -d ' ' -f 1,2 >> $CONDA_DIR/conda-meta/pinned && \
-    conda clean --all -f -y && \
-    fix-permissions $CONDA_DIR && \
-    fix-permissions /home/$NB_USER
-
 USER root
+
+# Fix permissions as root
+RUN fix-permissions "${CONDA_DIR}" \
+ && fix-permissions "/home/${NB_USER}" \
+ && fix-permissions /srv/julia/
 
 # create symlink to jupyterhub-singleuser to handle run/spawn when setting user to root(0)
 RUN ln -s "${CONDA_DIR}/envs/notebook/bin/jupyter" /usr/local/bin/ \
