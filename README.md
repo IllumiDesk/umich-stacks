@@ -1,8 +1,8 @@
-[![Build Status](https://travis-ci.com/IllumiDesk/docker-stacks.svg?branch=main)](https://travis-ci.com/IllumiDesk/docker-stacks)
+[![Build Status](https://travis-ci.com/IllumiDesk/umich-stacks.svg?branch=main)](https://travis-ci.com/IllumiDesk/umich-stacks)
 
-# IllumiDesk Docker Stacks
+# IllumiDesk Docker Stacks for the University of Michigan (Robotics)
 
-Dockerfiles and related assets for IllumiDesk's workspace images. The purpose of this repo is to provide a template repo for IllumiDesk customer-centric images. To create a new customer-centric repo, click on the Use this Template button and confirm the repo name.
+This repo is used to manage University of Michigan's docker images for the IllumiDesk learning environment integrated with the Canvas LMS.
 
 ## Pre Requisits
 
@@ -27,7 +27,7 @@ make build-all
 Running the image standalone is helpful for testing:
 
 ```bash
-docker run -p 8888:8888 illumidesk/illumidesk-notebook:latest
+docker run -p 8888:8888 illumidesk/umich-notebook:latest
 ```
 
 Then, navigate to `http://localhost:8888` to access your Jupyter Notebook server.
@@ -39,14 +39,6 @@ Then, navigate to `http://localhost:8888` to access your Jupyter Notebook server
 ```bash
 make test
 ```
-
-## Image catalogue
-
-| Image | DockerHub Link |
-| --- | --- |
-| illumidesk/base-notebook | [![Docker Image](https://img.shields.io/docker/automated/illumidesk/base-notebook)](https://img.shields.io/docker/automated/illumidesk/base-notebook?label=base-notebook) |
-| illumidesk/illumidesk-notebook | [![Docker Image](https://img.shields.io/docker/automated/illumidesk/illumidesk-notebook)](https://hub.docker.com/repository/docker/illumidesk/illumidesk-notebook?label=illumidesk-notebook) |
-| illumidesk/grader-notebook | [![Docker Image](https://img.shields.io/docker/automated/illumidesk/grader-notebook)](https://hub.docker.com/repository/docker/illumidesk/grader-notebook?label=grader-notebook) |
 
 ## Build Mechanism
 
@@ -61,7 +53,7 @@ make build-all
 Build one image with custom tag:
 
 ```bash
-make build/base-notebook TAG=mytag
+make build/umich-notebook TAG=mytag
 ```
 
 > The base image uses the standard `repo2docker` convention to set dependencies. [Refer to this project's documentaiton](https://repo2docker.readthedocs.io/en/latest/) for additional configuration options.
@@ -72,7 +64,7 @@ make build/base-notebook TAG=mytag
 ```
 FROM jupyter/base-notebook:latest AS base
 
-FROM illumidesk/base-notebook:latest
+FROM illumidesk/umich-notebook:latest
 
 USER root
 
@@ -95,7 +87,7 @@ This step requires creating an Organization account in DockerHub or other docker
 command will push the image to the DockerHub registry by default. Please refer to the official Docker documentation if you would
 like to push another registry.
 
-For example, assuming the DockerHub organization is `illumidesk`, the source files are in the `illumidesk-notebook` folder, and the tag is `latest`, then the full namespace for the image would be `illumidesk/illumidesk-notebook:latest`. Assuming the image has been built, push the image to DockerHub or any other docker registry with the `docker push ...` command:
+For example, assuming the DockerHub organization is `illumidesk`, the source files are in the `umich-notebook` folder, and the tag is `latest`, then the full namespace for the image would be `illumidesk/umich-notebook:latest`. Assuming the image has been built, push the image to DockerHub or any other docker registry with the `docker push ...` command:
 
 ```bash
 docker push illumidesk/illumidesk-notebook:latest
