@@ -10,7 +10,7 @@ enable_classicextensions () {
 
 install_labextensions () {
     # Add jupyterlab extensions
-    jupyter labextension install @jupyter-widgets/jupyterlab-manager@^2.0.0
+    jupyter labextension install @jupyter-widgets/jupyterlab-manager@^2.0.0 --minimize=False
 }
 
 install_jupyter_server_proxy () {
@@ -23,6 +23,16 @@ install_jupyter_server_proxy () {
     rm -rf "${HOME}/.node-gyp"
     fix-permissions "${CONDA_DIR}"
     fix-permissions "${HOME}"
+}
+
+install_gmt_deps () {
+    # install with mamba vs conda for speed
+    mamba install -y \
+        gmt=6.* \
+        jupyter-offlinenotebook=0.1.* \
+        pygmt=0.* \
+        sympy=1.6.* \
+        -c conda-forge
 }
 
 cleanup () {
@@ -40,9 +50,11 @@ cleanup () {
     conda clean --all -y
 }
 
+
 main () {
     enable_classicextensions
     install_labextensions
     install_jupyter_server_proxy
+    install_gmt_deps
     cleanup
 }

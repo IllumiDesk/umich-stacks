@@ -1,6 +1,6 @@
 FROM jupyter/base-notebook:45bfe5a474fa AS base
 
-FROM illumidesk/base-notebook:latest
+FROM illumidesk/umich-base:latest
 
 ARG NB_UID=1000
 ARG NB_GID=100
@@ -8,8 +8,8 @@ ARG NB_GID=100
 # add group id since its not included by repo2docker but we need it
 # to run fix-permissions
 ENV NB_USER=jovyan
-ENV NB_UID=$NB_UID
-ENV NB_GID=$NB_GID
+ENV NB_UID="${NB_UID}"
+ENV NB_GID="${NB_GID}"
 ENV HOME="/home/${NB_USER}"
 
 USER root
@@ -45,47 +45,25 @@ RUN mkdir -p /etc/jupyter
 COPY jupyter_notebook_config.py /etc/jupyter/
 COPY global_nbgrader_config.py /etc/jupyter/nbgrader_config.py
 
-# Create NB_USER with name jovyan user with UID=1000 and in the 'users' group
-# and make sure these dirs are writable by the `users` group.
-RUN echo "auth requisite pam_deny.so" >> /etc/pam.d/su && \
+# make sure the right dirs are writable by the `users` group
+RUN touch /etc/sudoers \
+ && echo "auth requisite pam_deny.so" >> /etc/pam.d/su && \
     sed -i.bak -e 's/^%admin/#%admin/' /etc/sudoers && \
     sed -i.bak -e 's/^%sudo/#%sudo/' /etc/sudoers && \
-    chmod g+w /etc/passwd && \
-    fix-permissions "${HOME}" && \
-    fix-permissions "${CONDA_DIR}"
+    chmod g+w /etc/passwd
+
+# update permissions, since repo2docker uses the same id for user and group
+RUN chown -Rf "${NB_UID}":"${NB_GID}" /srv/julia \
+ && chown -Rf "${NB_UID}":"${NB_GID}" "${CONDA_DIR}" \
+ && chown -Rf "${NB_UID}":"${NB_GID}" "${HOME}"
+
+# fix permissions for jupyter/docker-stacks compatibility
+RUN fix-permissions /srv/julia \
+ && fix-permissions "${CONDA_DIR}" \
+ && fix-permissions "${HOME}"
 
 # create path required by start.sh
 RUN mkdir -p /etc/sudoers.d/
-
-# update permissions as root
-RUN fix-permissions /etc/jupyter/ \
- && fix-permissions "${CONDA_DIR}" \
- && fix-permissions "${HOME}"
-
-USER "${NB_UID}"
-
-# reinstall everything in the requirements.txt file but ignore terminado to avoid disutils error
-# https://github.com/pypa/pip/issues/5247
-#COPY requirements.txt /tmp/requirements.txt
-#RUN python3 -m pip install --no-cache --force -r /tmp/requirements.txt --ignore-installed \
-#    terminado
-
-RUN jupyter serverextension enable --sys-prefix --py jupyter_server_proxy \
- && jupyter labextension install @jupyterlab/server-proxy@^2.1.1 \
- && jupyter lab build -y \
- && jupyter lab clean -y \
- && npm cache clean --force \
- && rm -rf "${HOME}/.cache/yarn" \
- && rm -rf "${HOME}/.node-gyp" \
- && fix-permissions "${CONDA_DIR}" \
- && fix-permissions "${HOME}"
-
-USER root
-
-# Fix permissions as root
-RUN fix-permissions "${CONDA_DIR}" \
- && fix-permissions "/home/${NB_USER}" \
- && fix-permissions /srv/julia/
 
 # create symlink to jupyterhub-singleuser to handle run/spawn when setting user to root(0)
 RUN ln -s "${CONDA_DIR}/envs/notebook/bin/jupyter" /usr/local/bin/ \

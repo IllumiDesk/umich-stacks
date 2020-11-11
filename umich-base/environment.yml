@@ -10,14 +10,12 @@ dependencies:
   # since the illumidesk stack depends on Postgress
   - psycopg2=2.8.*
 
-  # use python 3.8 as the default
-  - python=3.8.5
+  # conda's distribution of gmt deps don't play nice with python3.8.x
+  # install python 3.7.x and monkey patch samesite cookie configs.
+  - python=3.7
 
   # install mamba package manager
   - mamba
-
-  # extras for julia GMT.jl
-  - gmt
 
   # python/pip packages
   - pip
@@ -30,3 +28,5 @@ dependencies:
     - https://github.com/IllumiDesk/nbgrader/archive/v0.64.2.zip
     - jupyter-server-proxy==1.5.0
     - jupyterlab==2.2.8
+    - nbconvert==5.6.1
+    - notebook==6.1.5
