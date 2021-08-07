@@ -11,8 +11,7 @@ USER "${NB_UID}"
 COPY install.jl /tmp/install.jl
 RUN julia /tmp/install.jl \
  && fix-permissions "${JULIA_PKGDIR}" \
- && fix-permissions "${HOME}" \
- && rm /tmp/install.jl
+ && fix-permissions "${HOME}"
 
 # copy configs, we use our own to provide a base jhub config and an additional
 # default config that loads/appends from the base config. this is usefule in case
