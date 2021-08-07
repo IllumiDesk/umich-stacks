@@ -17,9 +17,12 @@ RUN julia /tmp/install.jl \
 # default config that loads/appends from the base config. this is usefule in case
 # we need to add other images that default to other paths, etc.
 RUN mkdir -p /etc/jupyter
-COPY --from=base /etc/jupyter/jupyter_notebook_config.py /etc/jupyter/jupyter_notebook_config_base.py
+RUN cp /etc/jupyter/jupyter_notebook_config.py /etc/jupyter/jupyter_notebook_config_base.py
 COPY jupyter_notebook_config.py /etc/jupyter/
 COPY global_nbgrader_config.py /etc/jupyter/nbgrader_config.py
+
+COPY requirements.txt /tmp/requirements.txt
+RUN python3 -m pip install -r /tmp/requirements.txt
 
 # install nbgrader and then disable all extensions by default
 RUN jupyter nbextension install --symlink --sys-prefix --py nbgrader --overwrite \
