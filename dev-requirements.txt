@@ -1,9 +1,7 @@
-black==19.10b0
-docker==4.2.2
-flake8==3.8.3
-git+https://github.com/jupyterhub/repo2docker.git@fc74bef9a866da58b4af2e35a4684e393fd9fae0
-pytest==5.4.3
-recommonmark==0.5.0
-requests==2.24.0
-tabulate==0.8.7
-transifex-client==0.13.11
+black==21.7b0
+docker==5.0.0
+flake8==3.9.2
+pytest==6.2.4
+requests==2.26.0
+tabulate==0.8.9
+transifex-client==0.14.3

@@ -1,4 +1,4 @@
-FROM illumidesk/umich-notebook:latest
+FROM illumidesk/umich-notebook:julia-1.6.1
 
 # add group id since its not included by repo2docker but we need it
 # to run fix-permissions
@@ -10,15 +10,22 @@ ARG NB_GID=100
 ENV NB_USER=jovyan
 ENV NB_UID="${NB_UID}"
 ENV NB_GID="${NB_GID}"
-ENV HOME="/home/${NB_USER}"
 
-USER root
-
+# enable create assignment extension
 RUN jupyter nbextension enable --sys-prefix create_assignment/main \
- && jupyter nbextension enable --sys-prefix formgrader/main --section=tree \
  && jupyter serverextension enable --sys-prefix nbgrader.server_extensions.formgrader
 
+# disable the assignment extension, since graders don't need it
+RUN jupyter serverextension disable --sys-prefix nbgrader.server_extensions.assignment_list \
+ && jupyter nbextension disable --sys-prefix assignment_list/main --section=tree
+
+# install and activate the async-nbgrader extensions
+RUN jupyter nbextension install --sys-prefix --py async_nbgrader --overwrite \
+ && jupyter nbextension enable --sys-prefix --py async_nbgrader \
+ && jupyter serverextension enable --sys-prefix --py async_nbgrader
+
 # fix permissions as root
+USER root
 RUN fix-permissions /srv/julia \
  && fix-permissions "${HOME}" \
  && fix-permissions "${CONDA_DIR}"
