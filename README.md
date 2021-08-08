@@ -1,4 +1,4 @@
-[![GitHub Workflow Status - Test](https://img.shields.io/github/workflow/status/illumidesk/umich-stacks/Test?logo=github&label=tests)](https://github.com/illumidesk/umich-stacks/actions)
+[![Test and Build Status](https://github.com/illumidesk/umich-stacks/workflows/Test%20and%20Build/badge.svg)](https://github.com/illumidesk/umich-stacks/actions?query=branch%3Amain+workflow%3A%22Test+and+Build%22)
 
 
 # IllumiDesk Docker Stacks for the University of Michigan

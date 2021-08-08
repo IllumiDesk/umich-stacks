@@ -1,4 +1,4 @@
-name: Build Docker Images
+name: Test and Push
 
 on:
   pull_request:
@@ -12,7 +12,7 @@ on:
 
 jobs:
   build-images:
-    name: Build Docker Images
+    name: Test and Push
     runs-on: ubuntu-latest
     permissions:
       contents: write
