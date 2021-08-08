@@ -1,15 +1,17 @@
 FROM illumidesk/umich-notebook:julia-1.6.1
 
-# add group id since its not included by repo2docker but we need it
-# to run fix-permissions
-ARG NB_UID=10001
-ARG NB_GID=100
+# update with grader user id and group id
+ENV NB_UID=10001
+ENV NB_GID=100
 
-# add group id since its not included by repo2docker but we need it
-# to run fix-permissions
-ENV NB_USER=jovyan
-ENV NB_UID="${NB_UID}"
-ENV NB_GID="${NB_GID}"
+WORKDIR /tmp
+
+RUN git clone https://github.com/IllumiDesk/async-nbgrader.git
+
+WORKDIR /tmp/async-nbgrader
+
+RUN pip install -U pip \
+ && pip install .
 
 # enable create assignment extension
 RUN jupyter nbextension enable --sys-prefix create_assignment/main \
@@ -26,7 +28,7 @@ RUN jupyter nbextension install --sys-prefix --py async_nbgrader --overwrite \
 
 # fix permissions as root
 USER root
-RUN fix-permissions /srv/julia \
+RUN fix-permissions "${JULIA_PKGDIR}" \
  && fix-permissions "${HOME}" \
  && fix-permissions "${CONDA_DIR}"
 

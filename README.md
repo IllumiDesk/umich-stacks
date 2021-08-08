@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.com/IllumiDesk/umich-stacks.svg?branch=main)](https://travis-ci.com/IllumiDesk/umich-stacks)
 
-# IllumiDesk Docker Stacks for the University of Michigan (Robotics)
+# IllumiDesk Docker Stacks for the University of Michigan
 
 This repo is used to manage University of Michigan's docker images for the IllumiDesk learning environment integrated with the Canvas LMS.
 
@@ -40,54 +40,17 @@ Then, navigate to `http://localhost:8888` to access your Jupyter Notebook server
 make test
 ```
 
-## Build Mechanism
+## Customize the Image
 
-1. Build and tag the base image or all images at once. Use the `TAG` argument to add your custom tag. The `TAG` argument defaults to `latest` if not specified.
+1. Add additional Julia packages to the `install.jl` file in the `./umich-notebook/install.jl` file.
 
-Build all images:
+2. Rebuild end-user and grader images with `make build-all`.
 
-```bash
-make build-all
-```
+3. (Optional) Push images to DockerHub
 
-Build one image with custom tag:
+This step requires creating an Organization account in DockerHub or other docker image compatible registry. The `docker push ...` command will push the image to the DockerHub registry by default. Please refer to the official Docker documentation if you would like to push another registry.
 
-```bash
-make build/umich-notebook TAG=mytag
-```
-
-> The base image uses the standard `repo2docker` convention to set dependencies. [Refer to this project's documentaiton](https://repo2docker.readthedocs.io/en/latest/) for additional configuration options.
-
-
-1. (Optional) Use the base image from step 1 above as a base image for an image compatible with the IllumiDesk stack.
-
-```
-FROM jupyter/base-notebook:latest AS base
-
-FROM illumidesk/umich-notebook:latest
-
-USER root
-
-COPY --from=base /usr/local/bin/start* /usr/local/bin/
-COPY --from=base /usr/local/bin/fix-permissions /usr/local/bin/
-COPY --from=base /etc/jupyter/jupyter_notebook_config.py /etc/jupyter/
-
-RUN ... do stuff
-
-RUN fix-permissions "${HOME} \
- && fix-permissions "${CONDA_DIR}  # make sure you run fix-permissions after doing stuff
-
-USER "${NB_USER}"
-
-```
-
-2. (Optional) Push images to DockerHub
-
-This step requires creating an Organization account in DockerHub or other docker image compatible registry. The `docker push ...`
-command will push the image to the DockerHub registry by default. Please refer to the official Docker documentation if you would
-like to push another registry.
-
-For example, assuming the DockerHub organization is `illumidesk`, the source files are in the `umich-notebook` folder, and the tag is `latest`, then the full namespace for the image would be `illumidesk/umich-notebook:latest`. Assuming the image has been built, push the image to DockerHub or any other docker registry with the `docker push ...` command:
+For example, assuming the DockerHub organization is `illumidesk`, the source files are in the `umich-notebook` folder, and the tag is `latest`, then the full namespace for the image would be `illumidesk/umich-notebook:latest`. Assuming the image has been built, push the image to DockerHub or any other docker registry with the `docker push <image-namespace>:<image-tag>` command:
 
 ```bash
 docker push illumidesk/illumidesk-notebook:latest
