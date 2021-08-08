@@ -1,4 +1,5 @@
-[![Build Status](https://travis-ci.com/IllumiDesk/umich-stacks.svg?branch=main)](https://travis-ci.com/IllumiDesk/umich-stacks)
+[![GitHub Workflow Status - Test](https://img.shields.io/github/workflow/status/illumidesk/umich-stacks/Test?logo=github&label=tests)](https://github.com/illumidesk/umich-stacks/actions)
+
 
 # IllumiDesk Docker Stacks for the University of Michigan
 
