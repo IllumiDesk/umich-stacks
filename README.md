@@ -31,7 +31,7 @@ Running the image standalone is helpful for testing:
 docker run -p 8888:8888 illumidesk/umich-notebook:latest
 ```
 
-Then, navigate to `http://localhost:8888` to access your Jupyter Notebook server.
+Then, navigate to `http://127.0.0.1:8888` to access your Jupyter Notebook server.
 
 > Refer to [docker's documentation](https://docs.docker.com/engine/reference/run/) for additional `docker run ...` options.
 
@@ -54,7 +54,8 @@ This step requires creating an Organization account in DockerHub or other docker
 For example, assuming the DockerHub organization is `illumidesk`, the source files are in the `umich-notebook` folder, and the tag is `latest`, then the full namespace for the image would be `illumidesk/umich-notebook:latest`. Assuming the image has been built, push the image to DockerHub or any other docker registry with the `docker push <image-namespace>:<image-tag>` command:
 
 ```bash
-docker push illumidesk/illumidesk-notebook:latest
+docker login
+docker push illumidesk/umich-notebook:latest
 ```
 
 ## Development and Testing
