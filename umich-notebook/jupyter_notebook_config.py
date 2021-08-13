@@ -21,3 +21,6 @@ c.NotebookApp.allow_root = True
 c.NotebookApp.allow_origin = '*'
 c.NotebookApp.token = ''
 c.NotebookApp.default_url = '/tree'
+
+c.ResourceUseDisplay.mem_limit = True
+c.ResourceUseDisplay.track_cpu_percent = True

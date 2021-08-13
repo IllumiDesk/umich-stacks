@@ -1,6 +1,7 @@
 # Based mostly off of https://github.com/jupyter/docker-stacks/datascience-notebook image
-ARG BASE_IMAGE=jupyter/datascience-notebook:julia-1.6.1
-FROM $BASE_IMAGE
+ARG TAG=julia-1.6.1
+ARG BASE_IMAGE=jupyter/datascience-notebook
+FROM $BASE_IMAGE:$TAG
 
 ENV NB_UID=1000
 ENV NB_GID=100
