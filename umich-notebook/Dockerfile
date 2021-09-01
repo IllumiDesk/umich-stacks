@@ -34,10 +34,8 @@ RUN jupyter nbextension install --symlink --sys-prefix --py nbgrader --overwrite
 RUN jupyter nbextension enable --sys-prefix validate_assignment/main --section=notebook \
  && jupyter serverextension enable --sys-prefix nbgrader.server_extensions.validate_assignment
 
-# everyone gets the course list and assignment list extensions
+# everyone assignment list extension
 RUN jupyter serverextension enable --sys-prefix nbgrader.server_extensions.assignment_list \
- && jupyter serverextension enable --sys-prefix nbgrader.server_extensions.course_list \
- && jupyter nbextension enable --sys-prefix course_list/main --section=tree \
  && jupyter nbextension enable --sys-prefix assignment_list/main --section=tree
 
 # update permissions as root
