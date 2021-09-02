@@ -1,5 +1,5 @@
 git+https://github.com/jupyter/nbgrader.git@2256b7efd094c4e7863f76ef26d2149b893a4462
 jupyter-server-proxy==3.1.0
-nbgitpuller==0.10.1
+nbgitpuller==0.10.2
 psycopg2-binary==2.9.1
 jupyter-resource-usage==0.6.0
