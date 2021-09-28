@@ -10,5 +10,5 @@ c.Authenticator.plugin_class = JupyterHubAuthPlugin
 c.Exchange.path_includes_course = True
 c.Exchange.root = "/srv/nbgrader/exchange"
 
-c.ExecutePreprocessor.iopub_timeout=180
-c.ExecutePreprocessor.timeout=360
+c.ExecutePreprocessor.iopub_timeout=1800
+c.ExecutePreprocessor.timeout=3600
