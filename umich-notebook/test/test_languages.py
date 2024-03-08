@@ -13,7 +13,7 @@ LOGGER = logging.getLogger(__name__)
     'language,version_output',
     [
         ('python', ['Python', '3.9.6\n']),
-        ('julia', ['julia', 'version', '1.6.1\n']),
+        ('julia', ['julia', 'version', '1.9.0\n']),
     ],
 )
 def test_languages(language, version_output):
