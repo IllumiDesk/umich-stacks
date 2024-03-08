@@ -1,5 +1,5 @@
 # Based mostly off of https://github.com/jupyter/docker-stacks/datascience-notebook image
-ARG TAG=julia-1.9.0
+ARG TAG=julia-1.9.3
 ARG BASE_IMAGE=jupyter/datascience-notebook
 FROM $BASE_IMAGE:$TAG
 
@@ -9,8 +9,7 @@ ENV NB_GID=100
 USER "${NB_UID}"
 
 # Install julia packages
-COPY install.jl /tmp/install.jl
-RUN julia /tmp/install.jl
+COPY setup-scripts/ /opt/setup-scripts/
 RUN fix-permissions "${JULIA_PKGDIR}" \
  && fix-permissions "${HOME}"
 
@@ -18,14 +17,18 @@ RUN pip install jupyter_kernel_gateway psycopg2-binary
 
 # update permissions as root
 USER root
-RUN fix-permissions /etc/jupyter/ \
- && fix-permissions "${CONDA_DIR}" \
- && fix-permissions "${JULIA_PKGDIR}" \
- && fix-permissions "${HOME}"
+# Julia dependencies
+# install Julia packages in /opt/julia instead of ${HOME}
+ENV JULIA_DEPOT_PATH=/opt/julia \
+    JULIA_PKGDIR=/opt/julia
 
-RUN mv "${CONDA_DIR}/share/jupyter/kernels/julia"* "${CONDA_DIR}/share/jupyter/kernels/julia/"
+# Setup Julia
+RUN /opt/setup-scripts/setup_julia.py
 
-USER "${NB_UID}"
+USER ${NB_UID}
+
+# Setup IJulia kernel & other packages
+RUN /opt/setup-scripts/setup-julia-packages.bash
 
 WORKDIR "${HOME}"
 
