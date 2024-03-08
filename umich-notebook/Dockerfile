@@ -9,7 +9,7 @@ ENV NB_GID=100
 USER "${NB_UID}"
 
 # Install julia packages
-RUN curl https://s3.us-west-2.amazonaws.com/configs.illumidesk.com/docker/install.jl --output /tmp/install.jl
+COPY install.jl /tmp/install.jl
 RUN julia /tmp/install.jl
 RUN fix-permissions "${JULIA_PKGDIR}" \
  && fix-permissions "${HOME}"

@@ -12,7 +12,7 @@ LOGGER = logging.getLogger(__name__)
 @pytest.mark.parametrize(
     'language,version_output',
     [
-        ('python', ['Python', '3.9.6\n']),
+        ('python', ['Python', '3.11.6\n']),
         ('julia', ['julia', 'version', '1.9.0\n']),
     ],
 )
