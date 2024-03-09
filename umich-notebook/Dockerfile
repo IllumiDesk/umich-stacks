@@ -23,13 +23,10 @@ USER root
 ENV JULIA_DEPOT_PATH=/opt/julia \
     JULIA_PKGDIR=/opt/julia
 
-# Setup Julia
-RUN /opt/setup-scripts/install-julia-packages.bash
-
 USER ${NB_UID}
 
-# Setup IJulia kernel & other packages
-RUN /opt/setup-scripts/setup-julia-packages.bash
+# Setup Julia
+RUN /opt/setup-scripts/install-julia-packages.bash
 
 WORKDIR "${HOME}"
 
