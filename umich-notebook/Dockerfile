@@ -9,7 +9,8 @@ ENV NB_GID=100
 USER "${NB_UID}"
 
 # Install julia packages
-COPY setup-scripts/ /opt/setup-scripts/
+COPY --chown="${NB_UID}":"${NB_GID}" setup-scripts/install-julia-packages.bash /opt/setup-scripts/install-julia-packages.bash
+RUN chmod +rx /opt/setup-scripts/install-julia-packages.bash
 RUN fix-permissions "${JULIA_PKGDIR}" \
  && fix-permissions "${HOME}"
 
@@ -23,7 +24,7 @@ ENV JULIA_DEPOT_PATH=/opt/julia \
     JULIA_PKGDIR=/opt/julia
 
 # Setup Julia
-RUN /opt/setup-scripts/setup_julia.py
+RUN /opt/setup-scripts/install-julia-packages.bash
 
 USER ${NB_UID}
 
