@@ -1,10 +1,13 @@
-# Based mostly off of https://github.com/jupyter/docker-stacks/datascience-notebook image
-ARG TAG=julia-1.9.3
-ARG BASE_IMAGE=jupyter/datascience-notebook
-FROM $BASE_IMAGE:$TAG
+# Based mostly off of:
+# https://github.com/jupyter/docker-stacks/blob/main/images/julia-notebook
+ARG REGISTRY=quay.io
+ARG OWNER=jupyter
+ARG BASE_CONTAINER=$REGISTRY/$OWNER/minimal-notebook
+FROM $BASE_CONTAINER
 
-ENV NB_UID=1000
-ENV NB_GID=100
+# Fix: https://github.com/hadolint/hadolint/wiki/DL4006
+# Fix: https://github.com/koalaman/shellcheck/wiki/SC3014
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 USER root
 
@@ -14,23 +17,14 @@ ENV JULIA_DEPOT_PATH=/opt/julia \
     JULIA_PKGDIR=/opt/julia
 
 # Setup Julia
-COPY setup-scripts/setup_julia.py /opt/setup-scripts/setup_julia.py
-RUN chmod +rx /opt/setup-scripts/setup_julia.py
 RUN /opt/setup-scripts/setup_julia.py
 
-USER "${NB_UID}"
+USER ${NB_UID}
 
-# Install julia packages
-COPY --chown="${NB_UID}":"${NB_GID}" setup-scripts/install-julia-packages.bash /opt/setup-scripts/install-julia-packages.bash
-
-RUN chmod +rx /opt/setup-scripts/install-julia-packages.bash
-RUN fix-permissions "${JULIA_PKGDIR}" \
- && fix-permissions "${HOME}"
+# Setup IJulia kernel & other packages
+RUN /opt/setup-scripts/setup-julia-packages.bash
 
 RUN pip install jupyter_kernel_gateway psycopg2-binary
-
-# Setup Julia
-RUN /opt/setup-scripts/install-julia-packages.bash
 
 WORKDIR "${HOME}"
 
