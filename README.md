@@ -35,15 +35,9 @@ Then, navigate to `http://127.0.0.1:8888` to access your Jupyter Notebook server
 
 > Refer to [docker's documentation](https://docs.docker.com/engine/reference/run/) for additional `docker run ...` options.
 
-4. Test:
-
-```bash
-make test
-```
-
 ## Customize the Image
 
-1. Add additional Julia packages to the `install.jl` file in the `./umich-notebook/install.jl` file.
+1. Add additional Julia packages by editing the `./umich-notebook/install-julia-packages.bash` file.
 
 2. Rebuild end-user and grader images with `make build-all`.
 
@@ -72,15 +66,9 @@ make venv
 make lint-all
 ```
 
-3. Run tests:
-
-```base
-make test
-```
-
 ## References
 
-These images are based on the `jupyter/docker-stacks` images. [Refer to their documentation](https://jupyter-docker-stacks.readthedocs.io/en/latest/) for the full set of configuration options.
+These images are based on the `jupyter/docker-stacks` images. [Refer to their documentation](https://jupyter-docker-stacks.readthedocs.io/en/latest/) for the full set of configuration and testing options.
 
 ## Attributions
 
