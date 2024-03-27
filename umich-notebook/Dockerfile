@@ -1,50 +1,31 @@
-# Based mostly off of https://github.com/jupyter/docker-stacks/datascience-notebook image
-ARG TAG=julia-1.6.1
-ARG BASE_IMAGE=jupyter/datascience-notebook
-FROM $BASE_IMAGE:$TAG
+# Based mostly off of:
+# https://github.com/jupyter/docker-stacks/blob/main/images/julia-notebook
+ARG REGISTRY=quay.io
+ARG OWNER=jupyter
+ARG BASE_CONTAINER=$REGISTRY/$OWNER/minimal-notebook
+FROM $BASE_CONTAINER
 
-ENV NB_UID=1000
-ENV NB_GID=100
+# Fix: https://github.com/hadolint/hadolint/wiki/DL4006
+# Fix: https://github.com/koalaman/shellcheck/wiki/SC3014
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-USER "${NB_UID}"
-
-# Install julia packages
-COPY install.jl /tmp/install.jl
-RUN julia /tmp/install.jl \
- && fix-permissions "${JULIA_PKGDIR}" \
- && fix-permissions "${HOME}"
-
-# copy configs, we use our own to provide a base jhub config and an additional
-# default config that loads/appends from the base config. this is usefule in case
-# we need to add other images that default to other paths, etc.
-RUN mkdir -p /etc/jupyter
-RUN cp /etc/jupyter/jupyter_notebook_config.py /etc/jupyter/jupyter_notebook_config_base.py
-COPY jupyter_notebook_config.py /etc/jupyter/
-COPY global_nbgrader_config.py /etc/jupyter/nbgrader_config.py
-
-COPY requirements.txt /tmp/requirements.txt
-RUN python3 -m pip install -r /tmp/requirements.txt
-
-# install nbgrader and then disable all extensions by default
-RUN jupyter nbextension install --symlink --sys-prefix --py nbgrader --overwrite \
- && jupyter nbextension disable --sys-prefix --py nbgrader \
- && jupyter serverextension disable --sys-prefix --py nbgrader
-
-# everyone gets the nbgrader validate extension
-RUN jupyter nbextension enable --sys-prefix validate_assignment/main --section=notebook \
- && jupyter serverextension enable --sys-prefix nbgrader.server_extensions.validate_assignment
-
-# everyone assignment list extension
-RUN jupyter serverextension enable --sys-prefix nbgrader.server_extensions.assignment_list \
- && jupyter nbextension enable --sys-prefix assignment_list/main --section=tree
-
-# update permissions as root
 USER root
-RUN fix-permissions /etc/jupyter/ \
- && fix-permissions "${CONDA_DIR}" \
- && fix-permissions "${JULIA_PKGDIR}" \
- && fix-permissions "${HOME}"
 
-USER "${NB_UID}"
+# Julia dependencies
+# install Julia packages in /opt/julia instead of ${HOME}
+ENV JULIA_DEPOT_PATH=/opt/julia \
+    JULIA_PKGDIR=/opt/julia
+
+# Setup Julia
+RUN /opt/setup-scripts/setup_julia.py
+
+USER ${NB_UID}
+
+# Setup IJulia kernel & other packages
+RUN /opt/setup-scripts/setup-julia-packages.bash
+
+RUN pip install jupyter_kernel_gateway psycopg2-binary
 
 WORKDIR "${HOME}"
+
+CMD ["jupyter", "kernelgateway", "--KernelGatewayApp.ip=0.0.0.0", "--KernelGatewayApp.port=8888"]
