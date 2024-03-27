@@ -13,8 +13,7 @@ VENV_ACTIVATE=. ${VENV_BIN}/activate
 PYTHON=${VENV_BIN}/python3
 
 # Need to list the images in build dependency order
-ALL_STACKS:=umich-notebook \
-	umich-grader
+ALL_STACKS:=umich-notebook
 
 ALL_IMAGES:=$(ALL_STACKS)
 
