@@ -22,7 +22,9 @@ RUN /opt/setup-scripts/setup_julia.py
 USER ${NB_UID}
 
 # Setup IJulia kernel & other packages
-RUN /opt/setup-scripts/setup-julia-packages.bash
+COPY --chown=${NB_UID}:${NB_GID} setup-scripts/*.* /opt/setup-scripts/.
+RUN chown +rx /opt/setup-scripts/install-julia-packages.bash \
+    && /opt/setup-scripts/install-julia-packages.bash
 
 RUN pip install jupyter_kernel_gateway psycopg2-binary
 
