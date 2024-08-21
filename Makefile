@@ -23,9 +23,9 @@ HADOLINT="${HOME}/hadolint"
 help:
 # http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
 # http://github.com/jupyter/docker-stacks
-	@echo "illumidesk/umich-stacks"
+	@echo "illumidesk/illumidesk-stacks"
 	@echo "====================="
-	@echo "Replace % with a stack directory name (e.g., make build/umich-notebook)"
+	@echo "Replace % with a stack directory name (e.g., make build/python-notebook)"
 	@echo
 	@grep -E '^[a-zA-Z0-9_%/-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
