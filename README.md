@@ -1,9 +1,9 @@
-[![Test Docker Image Status](https://github.com/illumidesk/illumidesk-stacks/workflows/Test%20and%20Push/badge.svg)](https://github.com/illumidesk/illumidesk-stacks/actions?query=branch%3Amain+workflow%3A%22Test+and+Push%22)
+[![Test Docker Image Status](https://github.com/illumidesk/umich-stacks/workflows/Test%20and%20Push/badge.svg)](https://github.com/illumidesk/umich-stacks/actions?query=branch%3Amain+workflow%3A%22Test+and+Push%22)
 
 
-# IllumiDesk Docker Stacks
+# IllumiDesk Docker Stacks for the University of Michigan
 
-This repo is used to manage IllumiDesk's standard docker images for the IllumiDesk learning environment to power Jupyter Server backends.
+This repo is used to manage University of Michigan's docker images for the IllumiDesk learning environment integrated with the Canvas LMS.
 
 ## Pre Requisits
 
@@ -28,7 +28,7 @@ make build-all
 Running the image standalone is helpful for testing:
 
 ```bash
-docker run -p 8888:8888 illumidesk/python-notebook:latest
+docker run -p 8888:8888 illumidesk/umich-notebook:latest
 ```
 
 Then, navigate to `http://127.0.0.1:8888` to access your Jupyter Notebook server.
@@ -37,24 +37,19 @@ Then, navigate to `http://127.0.0.1:8888` to access your Jupyter Notebook server
 
 ## Customize the Image
 
-1. Add additional Python packages by editing the `./python-notebook/requirements.txt` file.
+1. Add additional Julia packages by editing the `./umich-notebook/install-julia-packages.bash` file.
 
 2. Rebuild end-user and grader images with `make build-all`.
 
-3. Push images to AWS ECR
-
-- [You must first authenticate](https://docs.aws.amazon.com/AmazonECR/latest/userguide/registry_auth.html) to push to AWS ECR repos using `docker` coomands.
-- Run `docker push <repo>` where `<repo>` represents the full path to your AWS ECR repository.
-
-1. (Optional) Push images to DockerHub
+3. (Optional) Push images to DockerHub
 
 This step requires creating an Organization account in DockerHub or other docker image compatible registry. The `docker push ...` command will push the image to the DockerHub registry by default. Please refer to the official Docker documentation if you would like to push another registry.
 
-For example, assuming the DockerHub organization is `illumidesk`, the source files are in the `python-notebook` folder, and the tag is `latest`, then the full namespace for the image would be `illumidesk/python-notebook:latest`. Assuming the image has been built, push the image to DockerHub or any other docker registry with the `docker push <image-namespace>:<image-tag>` command:
+For example, assuming the DockerHub organization is `illumidesk`, the source files are in the `umich-notebook` folder, and the tag is `latest`, then the full namespace for the image would be `illumidesk/umich-notebook:latest`. Assuming the image has been built, push the image to DockerHub or any other docker registry with the `docker push <image-namespace>:<image-tag>` command:
 
 ```bash
 docker login
-docker push illumidesk/python-notebook:latest
+docker push illumidesk/umich-notebook:latest
 ```
 
 ## Development and Testing
