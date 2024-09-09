@@ -3,8 +3,8 @@ import pandas as pd
 from datetime import datetime
 
 
-COURSE_SLUG = "rob101-fa-2023"
-API_KEY = "38c47c2ad80d3a584b79601b60d9b3b36affd209"
+COURSE_SLUG = "course-slug-here"
+API_KEY = "your-api-key-here"
 url = f"https://api.illumidesk.com/api/v1/courses/{COURSE_SLUG}/submissions/"
 
 headers = {
